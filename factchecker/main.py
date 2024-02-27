@@ -15,8 +15,17 @@ text_splitter = CharacterTextSplitter(
 )
 
 loader = TextLoader('factchecker/facts.txt')
+
 docs = loader.load_and_split(
     text_splitter=text_splitter
 )
 
-print(docs)
+db = Chroma.from_documents(
+    documents = docs,
+    embedding = embeddings,
+    persist_directory = "factchecker/emb"
+)
+
+results = db.similarity_search_with_score("intresting fact about english language")
+
+print(results)
